@@ -34,6 +34,27 @@ a * { pointer-events: none; }
     row-gap: .5rem;
 }
 .actions.primary { gap: .5rem; }
+.actions.vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.actions.vertical a {
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.downloads-section {
+    margin-top: 2rem;
+}
+.downloads-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    color: var(--fg-1);
+    border-bottom: 1px solid var(--bg-3);
+    padding-bottom: 0.3rem;
+}
 .actions:not(.primary) a,
 .actions:not(.primary) button {
     color: var(--fg-3);
@@ -400,14 +421,14 @@ footer a[title] svg, footer button svg {
     position: relative;
     -top: .05rem;
 }
-footer .faircamp_signature {
+footer .loracamp_signature {
     align-items: center;
     column-gap: .3em;
     display: inline-flex;
     font-size: 0.8em;
 }
-footer .faircamp_signature svg { font-size: 1.2em; }
-footer .faircamp_signature .version { font-size: .9em; }
+footer .loracamp_signature svg { font-size: 1.2em; }
+footer .loracamp_signature .version { font-size: .9em; }
 footer svg {
     position: relative;
     top: .05em;

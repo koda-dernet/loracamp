@@ -10,10 +10,10 @@ The title of your Lora collection.
 title = "My Awesome Loras"
 ```
 
-### `author`
-The default author name for the collection.
+### `creator`
+The default creator name for the collection.
 ```toml
-author = "Artisan"
+creator = "Artisan"
 ```
 
 ### `base_url`
@@ -84,19 +84,24 @@ site_metadata = """
 
 ---
 
+## Implemented Features (Ported from Faircamp)
+
+| Field | Description |
+| :--- | :--- |
+| `feeds` | RSS 2.0 (`feed.rss`) and Atom 1.0 (`feed.atom`) generated at site root when `base_url` is set. Feed discovery `<link>` tags included in `base.html`. |
+| `opengraph` | `og:title`, `og:description`, `og:image`, `og:url`, and `twitter:card` injected per-page via `base.html`. |
+| `loracamp_signature` | Toggle to disable the LoraCamp footer credits. Set `loracamp_signature = false`. |
+
 ## Pending Implementation (Faircamp Gaps)
 
 The following features from Faircamp's `catalog.eno` are not yet implemented in LoraCamp:
 
 | Field | Description |
 | :--- | :--- |
-| `feeds` | Generation of RSS/Atom/Podcast feeds. |
-| `opengraph` | Support for Open Graph social metadata tags. |
 | `cache_optimization` | Advanced control over asset purging (`delayed`, `immediate`, `wipe`). |
 | `rotate_download_urls` | Logic for randomizing download URLs on every build. |
 | `freeze_download_urls` | Manual randomization of download URLs for anti-hotlinking. |
 | `label_mode` | Multi-artist support where the homepage shows a roster instead of a single creator. |
-| `faircamp_signature` | Toggle to disable the LoraCamp footer credits. |
 | `feature_support_artists`| Logic for linking guest creators to their own pages. |
 
 ---

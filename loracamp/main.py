@@ -8,6 +8,14 @@ def main():
     parser.add_argument("--build", action="store_true", help="Build the site")
     parser.add_argument("--cdn-url", type=str, help="Optional CDN URL for large files")
     parser.add_argument("--output", type=str, default=".", help="Output directory (default: current)")
+    parser.add_argument(
+        "--include", action="append", dest="include_patterns", metavar="PATTERN",
+        help="Only process paths containing this pattern (can be used multiple times)"
+    )
+    parser.add_argument(
+        "--exclude", action="append", dest="exclude_patterns", metavar="PATTERN",
+        help="Skip paths containing this pattern (can be used multiple times)"
+    )
 
     args = parser.parse_args()
 
@@ -18,7 +26,9 @@ def main():
         engine = LoraCampEngine(
             catalog_dir=catalog_path,
             output_dir=output_path,
-            cdn_url=args.cdn_url
+            cdn_url=args.cdn_url,
+            include_patterns=args.include_patterns,
+            exclude_patterns=args.exclude_patterns,
         )
         engine.build()
     else:

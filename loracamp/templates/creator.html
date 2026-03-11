@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}{{ creator.name or creator.title }} - {{ catalog.title if catalog else "LoraCamp" }}{% endblock %}
+
+{% block head %}
+{% if creator_image_url %}
+<meta property="og:image" content="{{ base_url }}{{ creator_image_url }}">
+{% endif %}
+{% if creator.synopsis %}
+<meta property="og:description" content="{{ creator.synopsis }}">
+<meta name="description" content="{{ creator.synopsis }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<header class="creator-header">
+    <a href="../index.html" class="back-link">← Back to Catalog</a>
+
+    {% if creator_image_url %}
+    <div class="creator-image-wrap">
+        <img src="{{ creator_image_url }}" alt="{{ creator.name }}" class="creator-image">
+    </div>
+    {% endif %}
+
+    <h1>{{ creator.name or creator.title }}</h1>
+
+    {% if creator.synopsis %}
+    <p class="synopsis">{{ creator.synopsis }}</p>
+    {% endif %}
+
+    {% if creator.links %}
+    <nav class="creator-links">
+        {% for link in creator.links %}
+        <a href="{{ link.url }}" class="pill-link" {% if link.url.startswith('http') %}target="_blank" rel="me noopener"{% endif %}>
+            {{ link.label or link.url }}
+        </a>
+        {% endfor %}
+    </nav>
+    {% endif %}
+</header>
+
+{% if creator.more %}
+<section class="creator-bio">
+    <div class="text">{{ creator.more | markdown }}</div>
+</section>
+{% endif %}
+
+{% if models %}
+<section class="model-list">
+    <h2>Models</h2>
+    <div class="model-grid">
+        {% for model in models %}
+        <a href="../{{ model.slug }}/index.html" class="model-card">
+            {% if model.preview_url %}
+            <img src="../{{ model.slug }}/{{ model.preview_url }}" alt="{{ model.manifest.title }}" class="card-preview">
+            {% else %}
+            <div class="placeholder"></div>
+            {% endif %}
+            <div class="card-info">
+                <strong>{{ model.manifest.title }}</strong>
+                {% if model.manifest.base_model %}
+                <span class="badge">{{ model.manifest.base_model }}</span>
+                {% endif %}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

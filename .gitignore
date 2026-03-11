@@ -210,3 +210,8 @@ referencecode/
 venv/
 buildsite/
 build_test/
+uv.lock
+samplefiles/
+.DS_Store
+.pyre_configuration
+pyrightconfig.json

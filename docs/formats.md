@@ -13,15 +13,34 @@ LoraCamp uses FFmpeg to process audio samples. Any format supported by your FFmp
 
 All audio samples are transcoded to **MP3 VBR 0** for optimized web streaming.
 
-## Image Formats (Previews)
+## Previews (Images & Video)
 
-Previews (formerly covers) are processed using the Pillow library.
+Previews are discovered automatically if named `preview.*` or `cover.*`.
+
+### Image Formats
+
+Previews are processed using the Pillow library. Supported formats:
 
 - **JPG / JPEG**
 - **PNG**
 - **WebP**
 
-All previews are automatically resized (max 800px) and optimized as `preview.jpg`.
+By default, all image previews are optimized as `preview.jpg` (max 800px).
+
+### Video Formats
+
+LoraCamp supports **MP4** video previews. When an MP4 is detected:
+
+- The video is copied to the site.
+- A static "poster" image is automatically extracted from the video for the catalog view and as a fallback.
+- The model page will display an interactive video player.
+
+### Configuration
+
+You can change the default output format for image previews in `catalog.toml` or `model.toml`:
+
+```toml
+preview_format = "webp"
+```
 
 ---
-

@@ -24,7 +24,12 @@
 
 <div class="page_split">
     <div class="model_sidebar">
-        {% if preview_url %}
+        {% if video_url %}
+        <video controls poster="{{ preview_url }}" class="cover">
+            <source src="{{ video_url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        {% elif preview_url %}
         <img src="{{ preview_url }}" alt="{{ model.title }}" class="cover">
         {% else %}
         <div class="placeholder large"></div>
@@ -39,8 +44,48 @@
         {% endif %}
 
         <div class="actions primary">
-            <a href="{{ model_url }}" class="button emphasized">Download Model (.safetensors)</a>
-            <a href="metadata.json" class="button">Metadata JSON</a>
+            {% for download in downloads %}
+            <a href="{{ download.url }}" class="button {{ 'primary-btn' if download.primary else 'secondary-btn' }} download-link" {{ 'download' if not download.url.startswith('http') else '' }}>
+                <span class="icon">{{ '💾' if download.primary else '📄' }}</span>
+                {{ download.label }}
+            </a>
+            {% endfor %}
+            
+            {% if downloads | length > 1 %}
+            <button id="downloadAllBtn" class="button action-btn">
+                <span class="icon">⬇️</span> Download All ({{ downloads | length }} files)
+            </button>
+            <script>
+                document.getElementById('downloadAllBtn').addEventListener('click', function() {
+                    const links = document.querySelectorAll('.download-link');
+                    if (links.length === 0) return;
+                    
+                    // Let the user know the download has started
+                    const btn = this;
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<span class="icon">⏳</span> Downloading...';
+                    btn.disabled = true;
+
+                    // Click each link with a 500ms delay to prevent browser blocking all at once
+                    links.forEach((link, index) => {
+                        setTimeout(() => {
+                            link.click();
+                            
+                            // Reset button after the last download
+                            if (index === links.length - 1) {
+                                setTimeout(() => {
+                                    btn.innerHTML = '<span class="icon">✅</span> Done';
+                                    setTimeout(() => {
+                                        btn.innerHTML = originalText;
+                                        btn.disabled = false;
+                                    }, 3000);
+                                }, 1000);
+                            }
+                        }, index * 500);
+                    });
+                });
+            </script>
+            {% endif %}
         </div>
     </div>
 
@@ -78,9 +123,31 @@
             <h2>Samples</h2>
             <div class="tracks">
                 {% for sample in samples %}
-                <div class="track">
-                    <span class="title">{{ sample.name }}</span>
-                    <audio controls src="{{ sample.url }}"></audio>
+                <div class="track" data-duration="{{ sample.duration | default('0') }}">
+                    <button class="track_playback" tabindex="-1">
+                        <span class="icon">
+                            <svg width="1em" height="1em" version="1.1" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><title>Play</title><path d="m11.116 59.677 45.476-26.453-45.544-28.093z"/></svg>
+                        </span>
+                        {% if preview_url %}
+                        <img aria-hidden="true" src="{{ preview_url }}">
+                        {% endif %}
+                    </button>
+                    <div>
+                        <div>
+                            <span class="number">{{ loop.index }}</span>
+                            <span class="title">{{ sample.name }}</span>
+                        </div>
+                        <audio controls preload="none">
+                            <source src="{{ sample.url }}" type="audio/mpeg">
+                        </audio>
+                    </div>
+                    <div>
+                        <span class="time">
+                            {% if sample.duration %}
+                            {{ '{:d}:{:02d}'.format((sample.duration // 60)|int, (sample.duration % 60)|int) }}
+                            {% endif %}
+                        </span>
+                    </div>
                 </div>
                 {% endfor %}
             </div>

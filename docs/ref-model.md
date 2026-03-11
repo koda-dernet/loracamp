@@ -24,6 +24,12 @@ The base model architecture this Model was trained on.
 base_model = "SDXL 1.0"
 ```
 
+### `trigger_word` (Optional)
+The trigger keyword required to activate this Model.
+```toml
+trigger_word = "vfilm"
+```
+
 ### `version` (Optional)
 The version string for this specific release.
 ```toml
@@ -48,23 +54,16 @@ A list of additional preview images to show in the gallery.
 previews = ["sample1.png", "sample2.png"]
 ```
 
-### `date` (Optional)
+### `release_date` (Optional)
 Release date in `YYYY-MM-DD` format. Used for sorting on the homepage.
 ```toml
-date = "2024-03-11"
+release_date = "2024-03-11"
 ```
 
 ### `unlisted` (Optional)
 If true, the Model won't appear on the homepage but its page will still be built.
 ```toml
 unlisted = true
-```
-
-### `theme` (Optional)
-Specify a per-model theme override.
-```toml
-[theme]
-accent_hue = 30 # Warm orange for this model
 ```
 
 ---

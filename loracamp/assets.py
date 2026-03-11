@@ -3,12 +3,12 @@ from pathlib import Path
 
 def copy_static_assets(output_dir: Path):
     """
-    Copy internal static assets to the build directory.
-    Initially handles the minimalist site.css.
+    Copy internal static assets (CSS, JS, images) to the build directory.
+    All assets live under a single /static/ directory in the output.
     """
     static_src = Path(__file__).parent / "static"
     static_dest = output_dir / "static"
-    
+
     if static_src.exists():
         if static_dest.exists():
             shutil.rmtree(static_dest)

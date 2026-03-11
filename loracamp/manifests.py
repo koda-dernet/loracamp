@@ -9,16 +9,22 @@ class BaseModel:
     synopsis: Optional[str] = None
     more: Optional[str] = None
     links: List[Dict[str, str]] = field(default_factory=list)
+    opengraph: Dict[str, str] = field(default_factory=dict)
 
 @dataclass
 class CatalogManifest(BaseModel):
+    creator: Optional[str] = None
     base_url: Optional[str] = None
     cdn_url: Optional[str] = None
     language: str = "en"
-    faircamp_signature: bool = True
+    about: Optional[str] = None
+    theme: Optional[Dict[str, Any]] = None
+    loracamp_signature: bool = True
     favicon: Optional[str] = None
     site_assets: List[str] = field(default_factory=list)
     site_metadata: Optional[str] = None
+    multiplecreators_mode: bool = False
+    preview_format: str = "jpg" # default format for previews
 
 @dataclass
 class ModelManifest(BaseModel):
@@ -35,6 +41,17 @@ class ModelManifest(BaseModel):
     base_model: Optional[str] = None # e.g., "SD 1.5", "SDXL"
     version: Optional[str] = None # e.g., "v1.0"
     sample_prompts: List[str] = field(default_factory=list)
+    extras: List[str] = field(default_factory=list) # Files to include in the ZIP bundle
+    preview_format: Optional[str] = None # Overrides catalog default
+
+@dataclass
+class CreatorManifest(BaseModel):
+    name: Optional[str] = None
+    aliases: List[str] = field(default_factory=list)
+    permalink: Optional[str] = None
+    about: Optional[str] = None
+    image: Optional[str] = None
+    links_dict: Dict[str, str] = field(default_factory=dict) # For the [links] table
 
 @dataclass
 class SampleManifest(BaseModel):
@@ -43,6 +60,8 @@ class SampleManifest(BaseModel):
     sample_number: Optional[int] = None
     # In LoraCamp, samples are usually associated with a specific file
     file: Optional[str] = None
+    preview: Optional[str] = None # Equivalent to 'cover' in Faircamp
+    sample_extras: List[str] = field(default_factory=list) # Equivalent to 'track_extras', for per-epoch files etc.
     about: Optional[str] = None
     prompt: Optional[str] = None
     negative_prompt: Optional[str] = None
@@ -77,6 +96,14 @@ def load_toml(path: Path) -> Dict[str, Any]:
 def parse_catalog(path: Path) -> CatalogManifest:
     data = load_toml(path)
     return CatalogManifest(**data)
+
+def parse_creator(path: Path) -> CreatorManifest:
+    data = load_toml(path)
+    # the [links] table in creator.toml is a Dict[str, str] 
+    # while BaseModel.links is a List[Dict[str, str]]
+    # we'll handle this mapping if needed, but for now just pass as is
+    links = data.pop("links", {})
+    return CreatorManifest(links_dict=links, **data)
 
 def parse_model(path: Path) -> ModelManifest:
     data = load_toml(path)

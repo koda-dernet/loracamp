@@ -9,22 +9,58 @@
 </header>
 
 <main class="page_grid">
-    <div class="model_list">
+    {% if catalog and catalog.multiplecreators_mode %}
+        {# Group models by creator #}
+        {% set creators_list = [] %}
         {% for model_item in models %}
-        <div class="release">
-            <a href="{{ model_item.slug }}/index.html">
-                {% if model_item.preview_url %}
-                <img src="{{ model_item.slug }}/{{ model_item.preview_url }}" alt="{{ model_item.manifest.title }}">
-                {% else %}
-                <div class="placeholder"></div>
-                {% endif %}
-                <h2>{{ model_item.manifest.title or model_item.dir.name }}</h2>
-            </a>
-            {% if model_item.manifest.creator %}
-            <p class="creator">by {{ model_item.manifest.creator }}</p>
+            {% set c = model_item.manifest.creator or "Unknown Creator" %}
+            {% if c not in creators_list %}
+                {% set _ = creators_list.append(c) %}
             {% endif %}
-        </div>
         {% endfor %}
-    </div>
+
+        {% for creator_name in creators_list %}
+        <section class="creator-section">
+            <h2 class="creator-heading">
+                <a href="{{ creator_name | lower | replace(' ', '-') }}/index.html">{{ creator_name }}</a>
+            </h2>
+            <div class="model_list">
+                {% for model_item in models %}
+                {% if (model_item.manifest.creator or "Unknown Creator") == creator_name %}
+                <div class="release">
+                    <a href="{{ model_item.slug }}/index.html">
+                        {% if model_item.preview_url %}
+                        <img src="{{ model_item.slug }}/{{ model_item.preview_url }}" alt="{{ model_item.manifest.title }}">
+                        {% else %}
+                        <div class="placeholder"></div>
+                        {% endif %}
+                        <h3>{{ model_item.manifest.title or model_item.dir.name }}</h3>
+                    </a>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+        {% endfor %}
+    {% else %}
+        {# Standard flat catalog view #}
+        <div class="model_list">
+            {% for model_item in models %}
+            <div class="release">
+                <a href="{{ model_item.slug }}/index.html">
+                    {% if model_item.preview_url %}
+                    <img src="{{ model_item.slug }}/{{ model_item.preview_url }}" alt="{{ model_item.manifest.title }}">
+                    {% else %}
+                    <div class="placeholder"></div>
+                    {% endif %}
+                    <h2>{{ model_item.manifest.title or model_item.dir.name }}</h2>
+                </a>
+                {% if model_item.manifest.creator %}
+                <p class="creator">by <a href="{{ model_item.manifest.creator | lower | replace(' ', '-') }}/index.html">{{ model_item.manifest.creator }}</a></p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
 </main>
 {% endblock %}
