@@ -1,0 +1,7 @@
+name = "ComfyUI Enthusiasts"
+aliases = ["CUE"]
+about = "A group dedicated to testing and pushing the limits of generative audio and image workflows."
+
+[[links]]
+label = "Group Repo"
+url = "https://github.com/comfyanonymous/ComfyUI"

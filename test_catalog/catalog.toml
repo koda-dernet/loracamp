@@ -1,0 +1,19 @@
+title = "LoraCamp Test Catalog"
+creator = "Scruffy Nerf"
+base_url = "https://loracamp.test"
+language = "en"
+synopsis = "A test catalog for LoraCamp features"
+about = """
+## Welcome to the LoraCamp Test Catalog
+This catalog is used to verify all of LoraCamp's extraction, generation, and formatting features during development.
+"""
+
+[[links]]
+label = "LoraCamp Github"
+url = "https://github.com/scruffynerf/loracamp"
+
+[theme]
+base = "dark"
+accent_hue = 210
+accent_chroma = 80
+round_corners = true
